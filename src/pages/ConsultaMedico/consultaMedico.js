@@ -1,26 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, Button, View, TouchableOpacity, TextInput, Image, Platform, Alert } from 'react-native';
-import { useNavigation, StackActions } from '@react-navigation/native'
+import { useNavigation, StackActions, useRoute } from '@react-navigation/native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 import api from '../../services/api/api';
 
 export default function ConsultaMedico(){
-    // const [idMedico, setIdMedico] = useState()
-    // const [dadosConsulta, setDadosConsulta] = useState(null);
 
-    const route = useRou
-    
+    const route = useRoute()
+    const id = route.params?.id
+    const token = route.params?.token
+    const [infoGeral, setInfoGeral ]= useState() //State provisorio so para ver se os dados estão chegando
+
+    console.log(id)
+    console.log(token)
 
     const selectConsulta = async () => {
         try {
-            
-
-            await api.get(`/tbl_consulta`, idMedico)
+            await api.get(`/ConsultasMedico`,{
+                Headers: {
+                    "idpessoa": id,
+                    "authorization": token
+                }
+            })
                 .then(response => {
                     console.log(response.data)
+                    setInfoGeral(response.data)
                     // setDadosConsulta(response.data);
                 })
                 .catch(function (error) {
@@ -31,10 +38,9 @@ export default function ConsultaMedico(){
         }
     }
 
-    // useEffect(()=>{
-    //     selectConsulta();
-    // }, []);
-
+    useEffect(()=>{
+        selectConsulta();
+    }, [infoGeral]);
 
 
 

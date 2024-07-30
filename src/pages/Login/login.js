@@ -25,6 +25,7 @@ export default function Login() {
   const [tipo, setTipo] = useState("");
 
   const [id, setId] = useState()
+  const [token, setToken] = useState("")
 
   const verifyUser = async () => {
     try {
@@ -41,6 +42,7 @@ export default function Login() {
             const buscaTipo = response.data.moreInfos.tipo
             // console.log(buscaTipo)
             setId(response.data.moreInfos.pessId);
+            setToken(response.data.token)
             setTipo(buscaTipo);
           })
           .catch((error) => {
@@ -60,7 +62,7 @@ export default function Login() {
   useEffect(() => {
     if (tipo === "medico") {
       // console.log("É MEDICO")
-      console.log(id)
+      // console.log(id)
       consultaMedico()
     }
     else if (tipo === "paciente") {
@@ -72,7 +74,7 @@ export default function Login() {
 
 
   const consultaMedico = () => {
-    navigation.navigate("ConsultaMedico", {id: id});
+    navigation.navigate("ConsultaMedico", {id: id, token: token});
   };
 
   const consultaPaciente = () => {
