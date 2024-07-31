@@ -9,26 +9,27 @@ import api from '../../services/api/api';
 
 export default function ConsultaMedico(){
 
-    const route = useRoute()
-    const id = route.params?.id
-    const token = route.params?.token
-    const [infoGeral, setInfoGeral ]= useState() //State provisorio so para ver se os dados estão chegando
+    const route = useRoute();
+    const id = route.params?.id;
+    const token = route.params?.token;
+    const [consultas, setConsultas] = useState(); 
 
-    console.log(id)
-    console.log(token)
+    // console.log(id)
+    // console.log(token)
 
     const selectConsulta = async () => {
         try {
             await api.get(`/ConsultasMedico`,{
-                Headers: {
+                headers: {
                     "idpessoa": id,
                     "authorization": token
                 }
             })
                 .then(response => {
-                    console.log(response.data)
-                    setInfoGeral(response.data)
-                    // setDadosConsulta(response.data);
+                    console.log(response.data.moreInfos);
+                    const dadosConsultas = response.data.moreInfos;
+                    setConsultas(dadosConsultas);
+                    console.log(dadosConsultas);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -36,11 +37,12 @@ export default function ConsultaMedico(){
         } catch (error) {
             console.log(error)
         }
+        // console.log(consultas);
     }
 
     useEffect(()=>{
         selectConsulta();
-    }, [infoGeral]);
+    }, []);
 
 
 
@@ -49,13 +51,15 @@ export default function ConsultaMedico(){
         <SafeAreaView style={styles.androidSafeArea}>
             <View style={styles.container}>
                 <Text style={styles.title}>Seja Bem Vindo as suas Consultas do dia!</Text>
-
-                <View style={styles.consultaItem}>
-                    <Text style={styles.textConsulta}>Nome do Paciente: </Text>
-                    <Text style={styles.textConsulta}>Horário da Consulta: 14:45</Text>
-                    <Text style={styles.textConsulta}>Data: Quinta-Feira - 10/06/2025</Text>
-                    <Text style={styles.textConsulta}>Local: Rua Alameda das Árvores, N° 225 Nova Veneza Sumaré</Text>
-                </View>
+                {
+                    consultas.map(consulta =>(
+                        <View style={styles.consultaItem} key={consulta.dadosPaciente}>
+                            <Text style={styles.textConsulta}>Nome do Paciente: {consulta.dadosPaciente.nomeDoPaciente}</Text>
+                            <Text style={styles.textConsulta}>Hora da Consulta: {consulta.horaConsulta}</Text>
+                            <Text style={styles.textConsulta}>Data da Consulta: {consulta.dataConsulta}</Text>
+                        </View>
+                    ))
+                }
             </View>
         </SafeAreaView>
     )

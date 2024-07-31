@@ -29,7 +29,7 @@ export default function Login() {
 
   const verifyUser = async () => {
     try {
-      console.log(cpf, senha);
+      // console.log(cpf, senha);
       if (cpf.length === 11 && senha !== "") {
         await api
           .post('/login', {
@@ -37,7 +37,7 @@ export default function Login() {
             senha: senha,
           })
           .then((response) => {
-            console.log(response.data);
+            // console.log(response.data);
             setTipo("");
             const buscaTipo = response.data.moreInfos.tipo
             // console.log(buscaTipo)
@@ -63,11 +63,11 @@ export default function Login() {
     if (tipo === "medico") {
       // console.log("É MEDICO")
       // console.log(id)
-      consultaMedico()
+      consultaMedico();
     }
     else if (tipo === "paciente") {
       // console.log("É paciente")
-      consultaPaciente()
+      consultaPaciente();
     }
   }, [tipo])
 
@@ -78,7 +78,7 @@ export default function Login() {
   };
 
   const consultaPaciente = () => {
-    navigation.navigate("ConsultaPaciente");
+    navigation.navigate("ConsultaPaciente", {id: id, token: token});
   };
 
   return (

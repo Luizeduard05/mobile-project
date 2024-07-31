@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, Button, View, TouchableOpacity, TextInput, Image, Platform, Alert } from 'react-native';
-import { useNavigation, StackActions } from '@react-navigation/native'
+import { useNavigation, StackActions, useRoute } from '@react-navigation/native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
@@ -9,19 +9,25 @@ import api from '../../services/api/api';
 
 
 export default function ConsultaPaciente(){
-    const [idPaciente, setIdPaciente] = useState(0);
-    const [dadosConsulta, setDadosConsulta] = useState(null);
 
-    const selectConsulta = async (idPaciente) => {
+    const route = useRoute();
+    const id = route.params?.id;
+    const token = route.params?.token;
+    const [infoGeral, setInfoGeral] = useState();
+
+    const selectConsulta = async () => {
         try {
-            if (idPaciente === 0) {
-                Alert.alert('Não foi possível exibir a consulta');
-                return;
-            }
-            
-            await api.get(`/tbl_consulta`, idPaciente)
+            await api.get(`/ConsultasPaciente`,{
+                headers: {
+                    "idpessoa": id,
+                    "authorization": token
+                }
+            })
                 .then(response => {
-                    setDadosConsulta(response.data);
+                    console.log(response.data)
+                    setInfoGeral(response.data.moreInfos.map)
+                    
+                    // setDadosConsulta(response.data);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -29,7 +35,9 @@ export default function ConsultaPaciente(){
         } catch (error) {
             console.log(error)
         }
+        console.log(infoGeral);
     }
+
 
     useEffect(()=>{
         selectConsulta();
