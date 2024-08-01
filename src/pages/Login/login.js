@@ -24,68 +24,59 @@ export default function Login() {
   const [senha, setSenha] = useState("");
   const [tipo, setTipo] = useState("");
 
-  const [id, setId] = useState()
-  const [token, setToken] = useState("")
+  const [id, setId] = useState("");
+  const [token, setToken] = useState("");
 
   const verifyUser = async () => {
-    try {
-      // console.log(cpf, senha);
-      if (cpf.length === 11 && senha !== "") {
-        await api
-          .post('/login', {
-            login: cpf,
-            senha: senha,
-          })
-          .then((response) => {
-            // console.log(response.data);
-            setTipo("");
-            const buscaTipo = response.data.moreInfos.tipo
-            // console.log(buscaTipo)
-            setId(response.data.moreInfos.pessId);
-            setToken(response.data.token)
-            setTipo(buscaTipo);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        // console.log(tipo)
-        // console.log(id)
-      } else {
-        console.log("Invalid CPF or senha");
+    if (cpf.length === 11 && senha !== "") {
+      try {
+        const response = await api.post("/login", {
+          login: cpf,
+          senha: senha,
+        });
+
+        if (response.data && response.data.moreInfos) {
+          setTipo(response.data.moreInfos.tipo);
+          setId(response.data.moreInfos.pessId);
+          setToken(response.data.token);
+        } else {
+          Alert.alert("Erro", "Dados de resposta inválidos.");
+        }
+      } catch (error) {
+        console.log("Error during login request:", error);
       }
-    } catch (error) {
-      console.log(error);
+    } else {
+      console.log("Invalid CPF or senha");
     }
   };
 
-
   useEffect(() => {
-    if (tipo === "medico") {
-      // console.log("É MEDICO")
-      // console.log(id)
-      consultaMedico();
+    if (tipo) {
+      if (tipo === "medico") {
+        consultaMedico();
+      } else if (tipo === "paciente") {
+        consultaPaciente();
+      }
     }
-    else if (tipo === "paciente") {
-      // console.log("É paciente")
-      consultaPaciente();
-    }
-  }, [tipo])
-
-
+  }, [tipo, id, token]);
 
   const consultaMedico = () => {
-    navigation.navigate("ConsultaMedico", {id: id, token: token});
+    if (id && token) {
+      navigation.navigate("ConsultaMedico", { id, token });
+    }
   };
 
   const consultaPaciente = () => {
-    navigation.navigate("ConsultaPaciente", {id: id, token: token});
+    if (id && token) {
+      navigation.navigate("ConsultaPaciente", {id: id, token: token});
+    }
   };
 
   return (
     <SafeAreaView style={styles.androidSafeArea}>
       <View style={styles.container}>
         <Image
-          source={require("../../../assets/imgLogo1.jpg")}
+          source={require("../../../assets/imgLogo1-removebg-preview.png")}
           style={styles.img}
         />
         <View>
@@ -98,12 +89,15 @@ export default function Login() {
           value={cpf}
           onChangeText={setCpf}
           style={styles.inputs}
+          keyboardType="numeric"
           placeholder="Digite seu CPF"
+          maxLength={11}
         ></TextInput>
         <TextInput
           value={senha}
           onChangeText={setSenha}
           style={styles.inputs}
+          secureTextEntry
           placeholder="Digite sua Senha"
         ></TextInput>
 
@@ -120,35 +114,33 @@ const styles = StyleSheet.create({
   androidSafeArea: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? getStatusBarHeight() : 0,
-    marginTop: 10,
-    backgroundColor: "#d3d3d3",
+    marginTop: 20,
+    backgroundColor: "#90B7CF",
     height: "100%",
     width: "100%",
   },
   container: {
     flex: 1,
-    backgroundColor: "#d3d3d3",
+    backgroundColor: "#90B7CF",
     alignItems: "center",
     justifyContent: "space-evenly",
   },
   img: {
-    width: 180,
-    height: 180,
-    borderRadius: 50,
-    borderWidth: 3,
-    borderColor: "#876842",
+    width: 250,
+    height: 250,
   },
   titles: {
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 24,
-    color: "#022135",
+    fontSize: 25,
+    color: "#cb3256",
   },
   title: {
     textAlign: "center",
-    color: "#876842",
+    color: "#022135",
     fontSize: 16,
-    textTransform: "uppercase",
+    fontWeight: 'bold',
+    margin: 10
   },
   inputs: {
     width: "90%",
@@ -157,15 +149,17 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     borderRadius: 10,
+    margin: 10
   },
   btnAcessar: {
     width: "90%",
     height: 50,
-    backgroundColor: "#876842",
+    backgroundColor: "#2188C7",
     justifyContent: "center",
-    marginBottom: 50,
+    marginBottom: 30,
     alignItems: "center",
     borderRadius: 10,
+    marginTop: 10
   },
   textBtn: {
     fontSize: 20,

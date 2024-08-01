@@ -16,8 +16,8 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name='Login' component={Login} options={{title: 'Login', headerShown: false}}/>
-          <Stack.Screen name='ConsultaMedico' component={ConsultaMedico} options={{title: 'Suas Consultas do dia'}}/>
-          <Stack.Screen name='ConsultaPaciente' component={ConsultaPaciente} options={{title: 'Suas Consultas'}}/>
+          <Stack.Screen name='ConsultaMedico' component={ConsultaMedico} options={{title: 'Médico'}}/>
+          <Stack.Screen name='ConsultaPaciente' component={ConsultaPaciente} options={{title: 'Paciente'}}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
