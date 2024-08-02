@@ -51,8 +51,8 @@ export default function ConsultaPaciente() {
                         <View style={styles.consultaItem} key={consulta.idConsulta}>
                             <Text style={styles.textConsulta}>Médico: {consulta.dadosMedico.nomeDoMedico}</Text>
                             <Text style={styles.textConsulta}>Especialidade: {consulta.dadosMedico.consultaEspecialidade}</Text>
-                            <Text style={styles.textConsulta}>Horário: {consulta.horaConsulta}</Text>
-                            <Text style={styles.textConsulta}>Data: {new Date(consulta.dataConsulta).toLocaleDateString()}</Text>
+                            <Text style={styles.textConsulta}>Horário: {consulta.horaConsulta.slice(0, 5)}</Text>
+                            <Text style={styles.textConsulta}>Data: {new Date(consulta.dataConsulta).toLocaleDateString('pt-BR')}</Text>
                         </View>
                     ))
                 ) : (
@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 15,
         marginBottom: 15,
+        width: '90%'
     },
     textConsulta:{
         color: 'black', 

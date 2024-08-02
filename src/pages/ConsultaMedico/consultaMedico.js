@@ -48,8 +48,8 @@ export default function ConsultaMedico(){
                     consultas.map(consulta =>(
                         <View style={styles.consultaItem} key={consulta.idConsulta}>
                             <Text style={styles.textConsulta}>Paciente: {consulta.dadosPaciente.nomeDoPaciente}</Text>
-                            <Text style={styles.textConsulta}>Horário: {consulta.horaConsulta}</Text>
-                            <Text style={styles.textConsulta}>Data: {new Date(consulta.dataConsulta).toLocaleDateString()}</Text>
+                            <Text style={styles.textConsulta}>Horário: {consulta.horaConsulta.slice(0, 5)}</Text>
+                            <Text style={styles.textConsulta}>Data: {new Date(consulta.dataConsulta).toLocaleDateString('pt-BR')}</Text>
                         </View>
                     ))
                 }
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 15,
         marginBottom: 15,
+        width: '90%'
     },
     textConsulta:{
         color: 'black', 
