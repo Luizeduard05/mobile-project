@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, Button, View, TouchableOpacity, TextInput, Image, Platform, Alert } from 'react-native';
+import { StyleSheet, Text, Button, View, TouchableOpacity, TextInput, Image, Platform, Alert, ScrollView } from 'react-native';
 import { useNavigation, StackActions, useRoute } from '@react-navigation/native'
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import api from '../../services/api/api';
 
@@ -40,25 +41,55 @@ export default function ConsultaPaciente() {
 
     return (
         <SafeAreaView style={styles.androidSafeArea}>
-            <View style={styles.container}>
-                <Image
-                    source={require("../../../assets/imgLogo1-removebg-preview.png")}
-                    style={styles.img}
-                />
-                <Text style={styles.title}>Seja Bem Vindo às suas Consultas!</Text>
-                {consultas.length > 0 ? (
-                    consultas.map((consulta) => (
-                        <View style={styles.consultaItem} key={consulta.idConsulta}>
-                            <Text style={styles.textConsulta}>Médico: {consulta.dadosMedico.nomeDoMedico}</Text>
-                            <Text style={styles.textConsulta}>Especialidade: {consulta.dadosMedico.consultaEspecialidade}</Text>
-                            <Text style={styles.textConsulta}>Horário: {consulta.horaConsulta.slice(0, 5)}</Text>
-                            <Text style={styles.textConsulta}>Data: {new Date(consulta.dataConsulta).toLocaleDateString('pt-BR')}</Text>
-                        </View>
-                    ))
-                ) : (
-                    <Text style={styles.textConsulta}>Nenhuma consulta encontrada.</Text>
-                )}
-            </View>
+            <ScrollView contentContainerStyle={styles.containerScroll}>
+                <View style={styles.container}>
+                    <Image
+                        source={require("../../../assets/imgLogo1-removebg-preview.png")}
+                        style={styles.img}
+                    />
+                    <Text style={styles.title}>Seja Bem Vindo às suas Consultas!</Text>
+                    {consultas.length > 0 ? (
+                        consultas.map((consulta) => (
+                            <View style={styles.consultaItem} key={consulta.idConsulta}>
+                                <Text style={styles.textConsulta}>Médico: {consulta.dadosMedico.nomeDoMedico}</Text>
+                                <Text style={styles.textConsulta}>Especialidade: {consulta.dadosMedico.consultaEspecialidade}</Text>
+                                <Text style={styles.textConsulta}>Horário: {consulta.horaConsulta.slice(0, 5)}</Text>
+                                <Text style={styles.textConsulta}>Data: {new Date(consulta.dataConsulta).toLocaleDateString('pt-BR')}</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        Alert.alert(
+                                            'Atenção!',
+                                            'Deseja realmente enviar essa solicitação de cancelamento?',
+                                            [
+                                                {
+                                                    text: 'OK',
+                                                    onPress: () => {
+                                                        return;
+                                                    }
+                                                },
+                                                {
+                                                    text: 'Cancelar',
+                                                    onPress: () => {
+                                                        return;
+                                                    }
+
+                                                }
+                                            ],
+                                            //Permite clicar fora da áre do alert para fechá-lo;
+                                            { cancelable: true }
+                                        )
+                                    }}
+                                    style={styles.btn}>
+
+                                    <FontAwesome5 name="trash-alt" color='#cb3256' size={28} />
+                                </TouchableOpacity>
+                            </View>
+                        ))
+                    ) : (
+                        <Text style={styles.textConsulta}>Nenhuma consulta encontrada.</Text>
+                    )}
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -75,12 +106,13 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         justifyContent: 'space-betwen',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '90%'
     },
     title:{
         textAlign: 'center', 
-        color: '#022135', 
-        fontSize: 20, 
+        color: '#cb3256', 
+        fontSize: 25, 
         textTransform: 'uppercase',
         fontWeight: 'bold',
         padding: 10,
@@ -95,7 +127,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 15,
         marginBottom: 15,
-        width: '90%'
+        width: '100%'
     },
     textConsulta:{
         color: 'black', 
@@ -106,12 +138,13 @@ const styles = StyleSheet.create({
     img: {
         width: 100,
         height: 100,
+    },
+    btn:{
+        alignSelf: 'flex-end'
+    },
+    containerScroll: {
+        flexGrow: 1,
+        alignItems: 'center',
+        paddingTop: 10,
     }
 })
-
-/* 
-#876842
-#2a4b62
-#022135
-#D3D3D3
-*/

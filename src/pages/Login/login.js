@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   androidSafeArea: {
     flex: 1,
     paddingTop: Platform.OS === "android" ? getStatusBarHeight() : 0,
-    marginTop: 20,
+    marginTop: 28,
     backgroundColor: "#90B7CF",
     height: "100%",
     width: "100%",
